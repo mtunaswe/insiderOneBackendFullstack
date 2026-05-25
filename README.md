@@ -18,19 +18,29 @@ Open http://localhost:8080 in your browser for the interactive frontend, or use 
 
 **Live demo:** https://insideronebackendfullstack-production.up.railway.app/
 
+## Features
+
+- **Play all matches** — `POST /league/play-all` simulates every remaining week in one call and returns a per-week breakdown of results plus the final table and champion.
+- **Edit match results** — `PUT /matches/{id}` updates a played match's score; standings and predictions recalculate automatically. The frontend supports inline editing by clicking any played match row.
+- **Embedded web UI** — `GET /` serves a single-page UI embedded in the Go binary via `embed.FS`. No npm, no build step, no separate deployment. Mirrors the screens in the brief (table, results, championship odds) and adds a remaining-fixtures view with per-match outcome bars. Available at http://localhost:8080 after `docker compose up`.
+- **Informative health endpoint** — `GET /health` returns diagnostic info: database ping status, league state (current week, matches played, season complete), app version and git commit, and uptime. Returns 503 when the database is unreachable. `GET /ready` is a lighter readiness probe (DB ping only) for orchestrators.
+- **Per-match predictor** — `GET /predictions` returns per-match win probabilities (home win / draw / away win) and expected goals for every remaining unplayed match, alongside the existing championship odds. Both are computed in a single Monte Carlo pass — no extra simulation cost.
+
 ## Endpoints
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET` | `/health` | Health check (includes DB ping) |
+| `GET` | `/` | Embedded web UI (no build step required) |
+| `GET` | `/health` | Diagnostic endpoint: DB ping, league state, version, uptime (503 when DB is down) |
+| `GET` | `/ready` | Lightweight readiness probe for orchestrators (DB ping only) |
 | `POST` | `/league/reset` | Wipe season and regenerate fixtures |
 | `GET` | `/league/table` | Current standings |
 | `GET` | `/league/week` | Current week index + total weeks |
 | `POST` | `/league/next-week` | Simulate next unplayed week |
-| `POST` | `/league/play-all` | Simulate all remaining weeks |
+| `POST` | `/league/play-all` | Simulate all remaining weeks; returns per-week results, final table, and champion |
 | `GET` | `/matches` | All matches (filter: `?week=N`, `?played=true`) |
-| `PUT` | `/matches/{id}` | Edit a played match's score |
-| `GET` | `/predictions` | Championship probabilities (Monte Carlo) |
+| `PUT` | `/matches/{id}` | Edit a played match's score; standings recalculate on next request |
+| `GET` | `/predictions` | Championship odds + per-match win probabilities via Monte Carlo |
 
 See [docs/api.md](docs/api.md) for detailed request/response examples.
 
