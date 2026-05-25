@@ -2,6 +2,14 @@
 
 A REST API (and embedded frontend) in Go that simulates a 4-team football mini-league following Premier League rules. It generates round-robin fixtures, simulates match results using a Poisson-based engine, maintains a live league table with proper tiebreakers, and predicts championship probabilities via Monte Carlo simulation. Users can advance week-by-week, play all remaining weeks at once, or edit past results — standings and predictions recalculate automatically.
 
+## Screenshots
+<table>
+  <tr>
+    <td><img src="ss1.png" alt="League table - Results - Predictions"></td>
+    <td><img src="ss2.png" alt="All matches - Editing"></td>
+  </tr>
+</table>
+
 ## Prerequisites
 
 - **Docker** (with Docker Compose v2)
