@@ -39,7 +39,6 @@ func main() {
 
 	runMigrations(cfg.DatabaseURL())
 
-
 	teamRepo := postgres.NewTeamRepo(pool)
 	matchRepo := postgres.NewMatchRepo(pool)
 

@@ -136,9 +136,9 @@ func (s *Service) PlayNextWeek(ctx context.Context) (*WeekSummary, error) {
 }
 
 type PlayAllResult struct {
-	Weeks      []WeekSummary        `json:"weeks"`
+	Weeks      []WeekSummary         `json:"weeks"`
 	FinalTable []domain.StandingsRow `json:"final_table"`
-	Champion   string               `json:"champion"`
+	Champion   string                `json:"champion"`
 }
 
 func (s *Service) PlayAll(ctx context.Context) (*PlayAllResult, error) {

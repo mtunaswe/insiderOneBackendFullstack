@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	baseExpectedGoals    = 1.35
-	homeAdvantageFactor  = 1.15
+	baseExpectedGoals      = 1.35
+	homeAdvantageFactor    = 1.15
 	awayDisadvantageFactor = 0.95
-	maxGoals             = 9
+	maxGoals               = 9
 )
 
 type PoissonSimulator struct {

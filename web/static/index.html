@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insider League</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <h1 class="header-title">INSIDER LEAGUE</h1>
+                <div class="header-subtitle">
+                    <span id="week-label">MATCHWEEK 1 OF 6</span>
+                    <span class="live-indicator"><span class="live-dot"></span> LIVE</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-danger" id="btn-reset">RESET</button>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <section class="left-col">
+                <h2 class="section-title"><span class="accent-square"></span> LEAGUE TABLE</h2>
+                <div class="table-wrapper">
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th class="col-pos">#</th>
+                                <th class="col-team">TEAM</th>
+                                <th class="col-num">P</th>
+                                <th class="col-num">W</th>
+                                <th class="col-num">D</th>
+                                <th class="col-num">L</th>
+                                <th class="col-num">GF</th>
+                                <th class="col-num">GA</th>
+                                <th class="col-num">GD</th>
+                                <th class="col-num col-pts">PTS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standings-body"></tbody>
+                    </table>
+                </div>
+
+                <div class="actions-row">
+                    <button class="btn btn-primary" id="btn-next-week">&#9654; NEXT WEEK</button>
+                    <button class="btn btn-primary" id="btn-play-all">&#9654;&#9654; PLAY ALL</button>
+                </div>
+            </section>
+
+            <section class="right-col">
+                <div class="card">
+                    <h2 class="section-title"><span class="accent-square"></span> <span id="results-title">LATEST RESULTS</span></h2>
+                    <div id="results-list" class="results-list"></div>
+                </div>
+
+                <div class="card">
+                    <h2 class="section-title"><span class="accent-square"></span> TITLE ODDS</h2>
+                    <div id="predictions-list" class="predictions-list"></div>
+                </div>
+            </section>
+        </div>
+
+        <section class="all-matches-section">
+            <h2 class="section-title clickable" id="toggle-all-matches">
+                <span class="accent-square"></span> ALL MATCHES
+                <span class="toggle-arrow" id="toggle-arrow">&#9660;</span>
+            </h2>
+            <div id="all-matches" class="all-matches collapsed"></div>
+        </section>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="/assets/app.js"></script>
+</body>
+</html>
