@@ -22,12 +22,15 @@ func Load() Config {
 		DBUser:     getEnv("DB_USER", "insider"),
 		DBPassword: getEnv("DB_PASSWORD", "insider_secret"),
 		DBName:     getEnv("DB_NAME", "insider_league"),
-		AppPort:    getEnv("APP_PORT", "8080"),
+		AppPort:    getEnvMulti([]string{"PORT", "APP_PORT"}, "8080"),
 		SimSeed:    getEnv("SIM_SEED", "42"),
 	}
 }
 
 func (c Config) DatabaseURL() string {
+	if url := os.Getenv("DATABASE_URL"); url != "" {
+		return url
+	}
 	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		c.DBUser, c.DBPassword, c.DBHost, c.DBPort, c.DBName)
 }
@@ -35,6 +38,15 @@ func (c Config) DatabaseURL() string {
 func getEnv(key, fallback string) string {
 	if v := os.Getenv(key); v != "" {
 		return v
+	}
+	return fallback
+}
+
+func getEnvMulti(keys []string, fallback string) string {
+	for _, k := range keys {
+		if v := os.Getenv(k); v != "" {
+			return v
+		}
 	}
 	return fallback
 }

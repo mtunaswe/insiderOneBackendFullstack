@@ -37,7 +37,9 @@ func main() {
 	}
 	defer pool.Close()
 
-	runMigrations(cfg.DatabaseURL())
+	if os.Getenv("MIGRATE_ON_BOOT") != "false" {
+		runMigrations(cfg.DatabaseURL())
+	}
 
 	teamRepo := postgres.NewTeamRepo(pool)
 	matchRepo := postgres.NewMatchRepo(pool)
