@@ -112,17 +112,20 @@
         });
     }
 
-    function renderPredictions(predictions) {
+    function renderPredictions(data) {
         const list = document.getElementById("predictions-list");
         list.innerHTML = "";
 
         if (state.currentWeek <= 4 && state.currentWeek <= state.totalWeeks) {
             list.innerHTML = '<div class="predictions-locked">ODDS UNLOCK AFTER WEEK 4</div>';
+            renderFixtures(null);
             return;
         }
 
+        const predictions = data ? data.championship_odds : null;
         if (!predictions || predictions.length === 0) {
             list.innerHTML = '<div class="predictions-locked">NO PREDICTIONS AVAILABLE</div>';
+            renderFixtures(null);
             return;
         }
 
@@ -139,6 +142,42 @@
             requestAnimationFrame(() => {
                 el.querySelector(".bar-fill").style.width = `${pct}%`;
             });
+        });
+
+        renderFixtures(data.remaining_matches);
+    }
+
+    function renderFixtures(matches) {
+        const card = document.getElementById("fixtures-card");
+        const list = document.getElementById("fixtures-list");
+        list.innerHTML = "";
+
+        if (!matches || matches.length === 0) {
+            card.classList.add("hidden");
+            return;
+        }
+
+        card.classList.remove("hidden");
+
+        matches.forEach((m) => {
+            const hw = Math.round(m.home_win * 100);
+            const dw = Math.round(m.draw * 100);
+            const aw = Math.round(m.away_win * 100);
+
+            const el = document.createElement("div");
+            el.className = "fixture-item";
+            el.innerHTML = `
+                <div class="fixture-header">
+                    <span class="fixture-week">WEEK ${m.week}</span>
+                </div>
+                <div class="fixture-teams">${m.home} vs ${m.away}</div>
+                <div class="odds-bar">
+                    <div class="segment segment-home" style="width:${hw}%">${hw >= 8 ? hw + "%" : ""}</div>
+                    <div class="segment segment-draw" style="width:${dw}%">${dw >= 8 ? dw + "%" : ""}</div>
+                    <div class="segment segment-away" style="width:${aw}%">${aw >= 8 ? aw + "%" : ""}</div>
+                </div>
+            `;
+            list.appendChild(el);
         });
     }
 
@@ -231,7 +270,7 @@
         }
         try {
             const data = await api("GET", "/predictions");
-            renderPredictions(data.predictions);
+            renderPredictions(data);
         } catch (e) {
             renderPredictions(null);
         }

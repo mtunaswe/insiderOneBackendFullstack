@@ -29,27 +29,26 @@ func (h *PredictHandler) Predictions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	played := true
-	playedMatches, err := h.matchRepo.List(ctx, domain.MatchFilter{Played: &played})
+	matches, err := h.matchRepo.List(ctx, domain.MatchFilter{})
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	standings := domain.ComputeStandings(teams, playedMatches)
-
-	unplayed := false
-	remaining, err := h.matchRepo.List(ctx, domain.MatchFilter{Played: &unplayed})
+	result, err := h.predictor.Predict(ctx, teams, matches)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	odds, err := h.predictor.ChampionshipOdds(ctx, standings, remaining, teams)
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, err.Error())
-		return
+	remaining := result.MatchOdds
+	if remaining == nil {
+		remaining = []domain.MatchOdds{}
 	}
 
-	writeJSON(w, http.StatusOK, PredictionsResponse{Predictions: odds})
+	writeJSON(w, http.StatusOK, PredictionsResponse{
+		ChampionshipOdds: result.ChampionshipOdds,
+		RemainingMatches: remaining,
+		Iterations:       result.Iterations,
+	})
 }

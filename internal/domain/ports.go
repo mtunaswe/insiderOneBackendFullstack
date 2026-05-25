@@ -28,7 +28,7 @@ type MatchSimulator interface {
 }
 
 type Predictor interface {
-	ChampionshipOdds(ctx context.Context, standings []StandingsRow, remaining []Match, teams []Team) ([]ChampionshipOdds, error)
+	Predict(ctx context.Context, teams []Team, matches []Match) (PredictionResult, error)
 }
 
 type Clock interface {

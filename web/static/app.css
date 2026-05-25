@@ -547,6 +547,77 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
+.hidden {
+    display: none;
+}
+
+.fixtures-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fixture-item {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.fixture-item:last-child {
+    border-bottom: none;
+}
+
+.fixture-header {
+    font-family: "Geist", sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.fixture-header .fixture-week {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.fixture-teams {
+    font-family: "Geist", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.odds-bar {
+    display: flex;
+    height: 18px;
+    border-radius: 2px;
+    overflow: hidden;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+.odds-bar .segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-weight: 700;
+    transition: width 400ms ease-out;
+    min-width: 0;
+}
+
+.odds-bar .segment-home {
+    background: var(--accent);
+}
+
+.odds-bar .segment-draw {
+    background: var(--muted);
+}
+
+.odds-bar .segment-away {
+    background: var(--warn);
+}
+
 @media (max-width: 900px) {
     .main-grid {
         grid-template-columns: 1fr;

@@ -17,7 +17,9 @@ type TableResponse struct {
 }
 
 type PredictionsResponse struct {
-	Predictions []domain.ChampionshipOdds `json:"predictions"`
+	ChampionshipOdds []domain.ChampionshipOdds `json:"championship_odds"`
+	RemainingMatches []domain.MatchOdds        `json:"remaining_matches"`
+	Iterations       int                       `json:"iterations"`
 }
 
 type MatchListResponse struct {

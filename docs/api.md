@@ -285,34 +285,51 @@ Edit the score of a played match. Standings and predictions recalculate on next 
 
 ## GET /predictions
 
-Championship probability for each team calculated via Monte Carlo simulation (10,000 iterations by default). Available after at least 4 weeks have been played for meaningful results.
+Championship probabilities and per-match outcome odds via Monte Carlo simulation (10,000 iterations by default). Both are computed in a single simulation pass.
 
 **Response 200:**
 ```json
 {
-  "predictions": [
+  "championship_odds": [
     {
       "team_id": 1,
       "team_name": "Chelsea",
-      "probability": 0.45
+      "probability": 0.6012
     },
     {
       "team_id": 3,
       "team_name": "Arsenal",
-      "probability": 0.28
+      "probability": 0.2015
     },
     {
       "team_id": 2,
       "team_name": "Manchester City",
-      "probability": 0.22
+      "probability": 0.1500
     },
     {
       "team_id": 4,
       "team_name": "Liverpool",
-      "probability": 0.05
+      "probability": 0.0473
     }
-  ]
+  ],
+  "remaining_matches": [
+    {
+      "match_id": 9,
+      "week": 5,
+      "home": "Manchester City",
+      "away": "Chelsea",
+      "home_win": 0.31,
+      "draw": 0.23,
+      "away_win": 0.46,
+      "expected_home_goals": 1.42,
+      "expected_away_goals": 1.78
+    }
+  ],
+  "iterations": 10000
 }
 ```
 
-Probabilities sum to approximately 1.0 (minor floating-point variance is expected).
+- Championship probabilities sum to approximately 1.0.
+- Per-match probabilities (`home_win + draw + away_win`) sum to ~1.0 (within 0.001).
+- If the season is complete, `remaining_matches` is an empty array.
+- `remaining_matches` is sorted by week ascending, then by match_id.
