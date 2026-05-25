@@ -58,7 +58,15 @@ func (h *LeagueHandler) NextWeek(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *LeagueHandler) PlayAll(w http.ResponseWriter, r *http.Request) {
-	summaries, err := h.svc.PlayAll(r.Context())
+	fromCurrent := r.URL.Query().Get("from_current")
+	if fromCurrent == "false" {
+		if err := h.svc.Reset(r.Context()); err != nil {
+			writeError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	result, err := h.svc.PlayAll(r.Context())
 	if err != nil {
 		if errors.Is(err, league.ErrSeasonComplete) {
 			writeError(w, http.StatusConflict, err.Error())
@@ -67,5 +75,5 @@ func (h *LeagueHandler) PlayAll(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	writeJSON(w, http.StatusOK, summaries)
+	writeJSON(w, http.StatusOK, result)
 }

@@ -135,7 +135,13 @@ func (s *Service) PlayNextWeek(ctx context.Context) (*WeekSummary, error) {
 	return summary, nil
 }
 
-func (s *Service) PlayAll(ctx context.Context) ([]WeekSummary, error) {
+type PlayAllResult struct {
+	Weeks      []WeekSummary        `json:"weeks"`
+	FinalTable []domain.StandingsRow `json:"final_table"`
+	Champion   string               `json:"champion"`
+}
+
+func (s *Service) PlayAll(ctx context.Context) (*PlayAllResult, error) {
 	var summaries []WeekSummary
 	for {
 		summary, err := s.PlayNextWeek(ctx)
@@ -147,7 +153,22 @@ func (s *Service) PlayAll(ctx context.Context) ([]WeekSummary, error) {
 		}
 		summaries = append(summaries, *summary)
 	}
-	return summaries, nil
+
+	standings, err := s.Standings(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	champion := ""
+	if len(standings) > 0 {
+		champion = standings[0].TeamName
+	}
+
+	return &PlayAllResult{
+		Weeks:      summaries,
+		FinalTable: standings,
+		Champion:   champion,
+	}, nil
 }
 
 func (s *Service) EditMatch(ctx context.Context, id int, homeGoals, awayGoals int) error {
