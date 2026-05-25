@@ -6,20 +6,21 @@ import (
 )
 
 type TeamRepository interface {
-	GetAll(ctx context.Context) ([]Team, error)
-	DeleteAll(ctx context.Context) error
-	InsertAll(ctx context.Context, teams []Team) error
+	List(ctx context.Context) ([]Team, error)
+	GetByID(ctx context.Context, id int) (Team, error)
+}
+
+type MatchFilter struct {
+	Week   *int
+	Played *bool
 }
 
 type MatchRepository interface {
-	GetAll(ctx context.Context) ([]Match, error)
-	GetByWeek(ctx context.Context, week int) ([]Match, error)
-	GetPlayed(ctx context.Context) ([]Match, error)
-	GetUnplayed(ctx context.Context) ([]Match, error)
+	List(ctx context.Context, filter MatchFilter) ([]Match, error)
 	GetByID(ctx context.Context, id int) (Match, error)
-	InsertAll(ctx context.Context, matches []Match) error
-	Update(ctx context.Context, m Match) error
-	DeleteAll(ctx context.Context) error
+	CreateBatch(ctx context.Context, matches []Match) error
+	UpdateResult(ctx context.Context, id int, homeGoals, awayGoals int) error
+	Truncate(ctx context.Context) error
 }
 
 type MatchSimulator interface {
