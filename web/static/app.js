@@ -256,6 +256,17 @@
             renderResults(latestResults, latestWeek > 0 ? latestWeek : null, animate);
             renderAllMatches(allMatches);
 
+            const hasPlayed = allMatches.some((m) => m.played);
+            const content = document.getElementById("all-matches");
+            const arrow = document.getElementById("toggle-arrow");
+            if (hasPlayed) {
+                content.classList.remove("collapsed");
+                arrow.classList.add("open");
+            } else {
+                content.classList.add("collapsed");
+                arrow.classList.remove("open");
+            }
+
             await fetchPredictions();
         } catch (e) {
             showToast(e.message);

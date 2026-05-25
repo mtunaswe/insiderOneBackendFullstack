@@ -16,6 +16,8 @@ docker compose up --build
 
 Open http://localhost:8080 in your browser for the interactive frontend, or use the API endpoints below with curl/Postman.
 
+**Live demo:** https://insideronebackendfullstack-production.up.railway.app/
+
 ## Endpoints
 
 | Method | Path | Description |
@@ -89,25 +91,23 @@ The brief specifies Premier League rules with 4 teams. A double round-robin (eac
 
 ## Deployment
 
-### Railway (Recommended)
+### Railway
 
-1. Push your repo to GitHub
-2. Create a new project on [Railway](https://railway.app)
-3. Add a **PostgreSQL** plugin
-4. Connect your GitHub repo — Railway auto-detects the Dockerfile
-5. Set environment variables from `.env.example` (Railway provides `DATABASE_URL` for the Postgres plugin — map it to `DB_HOST`, `DB_PORT`, etc., or adapt `config.go` to read `DATABASE_URL` directly)
-6. Deploy — migrations run automatically on boot
+Deployed at: https://insideronebackendfullstack-production.up.railway.app/
 
-**railway.toml** (optional, place in repo root):
-```toml
-[build]
-builder = "dockerfile"
+The app is configured for Railway out of the box:
+- `railway.toml` in the repo root tells Railway to use the Dockerfile
+- `DATABASE_URL` is read directly from the Railway-provided Postgres plugin
+- `PORT` is injected by Railway and the app respects it
+- Migrations run automatically on boot (`MIGRATE_ON_BOOT=true`)
+- Fixtures are auto-seeded on first deploy with an empty database
 
-[deploy]
-startCommand = "/bin/server"
-healthcheckPath = "/health"
-healthcheckTimeout = 5
-```
+To replicate:
+1. Push repo to GitHub
+2. Create a new Railway project → Deploy from GitHub Repo
+3. Add a PostgreSQL plugin and reference `DATABASE_URL` in the app service variables
+4. Set `MIGRATE_ON_BOOT=true` and `SIM_SEED=42`
+5. Generate a domain under Settings → Networking
 
 ### Alternatives
 
