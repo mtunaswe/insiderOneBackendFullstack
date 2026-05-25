@@ -62,8 +62,9 @@ func main() {
 	leagueH := httpapi.NewLeagueHandler(svc)
 	matchH := httpapi.NewMatchHandler(svc, matchRepo)
 	predictH := httpapi.NewPredictHandler(pred, teamRepo, matchRepo)
+	healthH := httpapi.NewHealthHandler(pool)
 
-	router := httpapi.NewRouter(leagueH, matchH, predictH)
+	router := httpapi.NewRouter(leagueH, matchH, predictH, healthH)
 
 	srv := &http.Server{
 		Addr:         ":" + cfg.AppPort,

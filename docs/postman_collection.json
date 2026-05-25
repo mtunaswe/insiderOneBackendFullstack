@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "insider-league-collection",
+		"name": "Insider League Simulator",
+		"description": "Complete API collection for the Insider League Simulator. Run requests in order for the full season flow: reset → play weeks → check table → predictions → edit match.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": ["{{baseUrl}}"],
+					"path": ["health"]
+				},
+				"description": "Verify the server is running and database is reachable."
+			}
+		},
+		{
+			"name": "1. Reset League",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/reset",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "reset"]
+				},
+				"description": "Wipe all match data and regenerate fixtures for a fresh season."
+			}
+		},
+		{
+			"name": "2. Get Current Week",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/week",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "week"]
+				},
+				"description": "Check which week we're on. Should be week 1 after reset."
+			}
+		},
+		{
+			"name": "3. Play Next Week (Week 1)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/next-week",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "next-week"]
+				},
+				"description": "Simulate week 1 matches."
+			}
+		},
+		{
+			"name": "4. Play Next Week (Week 2)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/next-week",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "next-week"]
+				},
+				"description": "Simulate week 2 matches."
+			}
+		},
+		{
+			"name": "5. Play Next Week (Week 3)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/next-week",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "next-week"]
+				},
+				"description": "Simulate week 3 matches."
+			}
+		},
+		{
+			"name": "6. Play Next Week (Week 4)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/next-week",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "next-week"]
+				},
+				"description": "Simulate week 4 matches. Predictions become meaningful after this."
+			}
+		},
+		{
+			"name": "7. Get League Table",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/table",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "table"]
+				},
+				"description": "Current standings after 4 weeks played."
+			}
+		},
+		{
+			"name": "8. Get Predictions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/predictions",
+					"host": ["{{baseUrl}}"],
+					"path": ["predictions"]
+				},
+				"description": "Championship probabilities via Monte Carlo simulation. Probabilities should sum to ~1.0."
+			}
+		},
+		{
+			"name": "9. Get All Matches",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/matches",
+					"host": ["{{baseUrl}}"],
+					"path": ["matches"]
+				},
+				"description": "List all 12 matches. Weeks 1-4 should be played, 5-6 unplayed."
+			}
+		},
+		{
+			"name": "10. Get Matches by Week",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/matches?week=1",
+					"host": ["{{baseUrl}}"],
+					"path": ["matches"],
+					"query": [
+						{
+							"key": "week",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Filter matches for week 1 only."
+			}
+		},
+		{
+			"name": "11. Get Played Matches",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/matches?played=true",
+					"host": ["{{baseUrl}}"],
+					"path": ["matches"],
+					"query": [
+						{
+							"key": "played",
+							"value": "true"
+						}
+					]
+				},
+				"description": "Filter to show only completed matches."
+			}
+		},
+		{
+			"name": "12. Play All Remaining",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/play-all",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "play-all"]
+				},
+				"description": "Simulate weeks 5 and 6. Returns per-week results, final table, and champion."
+			}
+		},
+		{
+			"name": "13. Edit Match (Change Score)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"home_goals\": 0,\n  \"away_goals\": 5\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/matches/1",
+					"host": ["{{baseUrl}}"],
+					"path": ["matches", "1"]
+				},
+				"description": "Edit match ID 1 to 0-5. After this, GET /league/table should reflect updated standings."
+			}
+		},
+		{
+			"name": "14. Verify Table After Edit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/table",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "table"]
+				},
+				"description": "Standings should reflect the edited match score."
+			}
+		},
+		{
+			"name": "15. Verify Predictions After Edit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/predictions",
+					"host": ["{{baseUrl}}"],
+					"path": ["predictions"]
+				},
+				"description": "Predictions recalculate based on new standings after the edit."
+			}
+		},
+		{
+			"name": "16. Play All (Fresh Start)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/league/play-all?from_current=false",
+					"host": ["{{baseUrl}}"],
+					"path": ["league", "play-all"],
+					"query": [
+						{
+							"key": "from_current",
+							"value": "false"
+						}
+					]
+				},
+				"description": "Reset and play entire season in one call. Useful for quick full simulation."
+			}
+		}
+	]
+}
