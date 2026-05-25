@@ -19,6 +19,7 @@ func NewRouter(leagueH *LeagueHandler, matchH *MatchHandler, predictH *PredictHa
 	r.Use(middleware.Timeout(30 * time.Second))
 
 	r.Get("/health", healthH.Health)
+	r.Get("/ready", healthH.Ready)
 
 	r.Post("/league/reset", leagueH.Reset)
 	r.Get("/league/table", leagueH.Table)

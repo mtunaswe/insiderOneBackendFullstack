@@ -1,11 +1,12 @@
 package domain
 
 const (
-	PointsWin  = 3
-	PointsDraw = 1
-	PointsLoss = 0
-	TotalWeeks = 6
-	TeamsCount = 4
+	PointsWin    = 3
+	PointsDraw   = 1
+	PointsLoss   = 0
+	TotalWeeks   = 6
+	TeamsCount   = 4
+	TotalMatches = 12
 )
 
 type StandingsRow struct {

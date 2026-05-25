@@ -25,7 +25,14 @@ import (
 	"github.com/mtunaswe/insider-league/pkg/db"
 )
 
+var (
+	version   = "dev"
+	commit    = "unknown"
+	buildTime = "unknown"
+)
+
 func main() {
+	startTime := time.Now()
 	cfg := config.Load()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -75,7 +82,14 @@ func main() {
 	leagueH := httpapi.NewLeagueHandler(svc)
 	matchH := httpapi.NewMatchHandler(svc, matchRepo)
 	predictH := httpapi.NewPredictHandler(pred, teamRepo, matchRepo)
-	healthH := httpapi.NewHealthHandler(pool)
+	healthH := httpapi.NewHealthHandler(pool, svc, httpapi.BuildInfo{
+		Version:   version,
+		Commit:    commit,
+		BuildTime: buildTime,
+	}, httpapi.AppConfig{
+		PredictIterations: iterations,
+		SimSeed:           seed,
+	}, startTime)
 
 	router := httpapi.NewRouter(leagueH, matchH, predictH, healthH)
 

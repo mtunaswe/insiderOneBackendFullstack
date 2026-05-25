@@ -8,13 +8,32 @@ All responses are JSON. Errors follow [RFC 7807](https://tools.ietf.org/html/rfc
 
 ## GET /health
 
-Health check with database connectivity status.
+Diagnostic endpoint returning app state, build info, database connectivity, and league status.
 
 **Response 200:**
 ```json
 {
   "status": "ok",
-  "db": "ok"
+  "version": "0.1.0",
+  "commit": "a1b2c3d",
+  "build_time": "2026-05-25T12:34:56Z",
+  "uptime_seconds": 1342,
+  "database": {
+    "status": "ok",
+    "ping_microseconds": 412
+  },
+  "league": {
+    "teams": 4,
+    "current_week": 5,
+    "total_weeks": 6,
+    "matches_played": 8,
+    "matches_total": 12,
+    "season_complete": false
+  },
+  "config": {
+    "predict_iterations": 10000,
+    "sim_seed": 42
+  }
 }
 ```
 
@@ -22,9 +41,30 @@ Health check with database connectivity status.
 ```json
 {
   "status": "degraded",
-  "db": "error"
+  "version": "0.1.0",
+  "commit": "a1b2c3d",
+  "build_time": "2026-05-25T12:34:56Z",
+  "uptime_seconds": 1342,
+  "database": {
+    "status": "error",
+    "error": "connection refused"
+  },
+  "config": {
+    "predict_iterations": 10000,
+    "sim_seed": 42
+  }
 }
 ```
+
+---
+
+## GET /ready
+
+Lightweight readiness probe for orchestrators. Checks DB connectivity only.
+
+**Response 200:** empty body (database reachable)
+
+**Response 503:** empty body (database unreachable)
 
 ---
 

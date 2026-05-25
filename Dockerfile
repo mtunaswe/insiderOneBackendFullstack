@@ -2,11 +2,19 @@ FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
+ARG VERSION=dev
+ARG COMMIT=unknown
+ARG BUILD_TIME=unknown
+
 COPY go.mod go.sum* ./
 RUN go mod download
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /bin/server ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "\
+    -X main.version=${VERSION} \
+    -X main.commit=${COMMIT} \
+    -X main.buildTime=${BUILD_TIME}" \
+    -o /bin/server ./cmd/server
 
 FROM alpine:3.20
 
