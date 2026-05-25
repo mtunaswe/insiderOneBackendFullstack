@@ -50,6 +50,17 @@ func main() {
 	sim := simulator.NewPoissonSimulator(rng)
 	svc := league.NewService(teamRepo, matchRepo, sim, rng)
 
+	seedCtx, seedCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer seedCancel()
+	matches, _ := matchRepo.List(seedCtx, domain.MatchFilter{})
+	if len(matches) == 0 {
+		if err := svc.Reset(seedCtx); err != nil {
+			log.Printf("auto-seed fixtures: %v", err)
+		} else {
+			log.Println("auto-seeded fixtures for fresh database")
+		}
+	}
+
 	iterations := 10000
 	if v := os.Getenv("PREDICT_ITERS"); v != "" {
 		if n, err := strconv.Atoi(v); err == nil && n > 0 {
