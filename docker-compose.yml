@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER:-insider}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-insider_secret}
+      POSTGRES_DB: ${DB_NAME:-insider_league}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-insider} -d ${DB_NAME:-insider_league}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-insider}
+      DB_PASSWORD: ${DB_PASSWORD:-insider_secret}
+      DB_NAME: ${DB_NAME:-insider_league}
+      APP_PORT: 8080
+      SIM_SEED: ${SIM_SEED:-42}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
