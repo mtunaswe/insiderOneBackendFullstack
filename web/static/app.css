@@ -50,6 +50,12 @@ body {
     border-bottom: 1px solid var(--line);
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 .header-title {
     font-family: "Bebas Neue", cursive;
     font-size: 48px;
@@ -67,6 +73,17 @@ body {
     font-size: 13px;
     color: var(--muted);
     text-transform: uppercase;
+}
+
+.company-badge {
+    display: flex;
+    align-items: center;
+}
+
+.company-logo {
+    display: block;
+    width: 124px;
+    height: auto;
 }
 
 .live-indicator {
@@ -377,6 +394,7 @@ body {
 
 .clickable {
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
 }
 
@@ -533,7 +551,18 @@ body {
     .main-grid {
         grid-template-columns: 1fr;
     }
+    .header {
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .header-right {
+        flex-direction: column;
+        align-items: flex-end;
+    }
     .header-title {
         font-size: 32px;
+    }
+    .company-logo {
+        width: 96px;
     }
 }
